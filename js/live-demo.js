@@ -73,7 +73,7 @@ var $eventName = $('[name="event_name"]');
 var $settingsPanel = $('div[class="panel-inner"]');
 
 var users = {
-  1: new BasicUser(1, "Desmond", "Strickland", "Fishery", Date.now()),
+  /*1: new BasicUser(1, "Desmond", "Strickland", "Fishery", Date.now()),
   2: new BasicUser(2, 'Thaddeus','Galvan','Professional Training & Coaching', Date.now()),
   3: new BasicUser(3, 'Lamont','Friedman','Automotive', Date.now()),
   4: new BasicUser(4, 'Martin','Holland','Information Technology and Services', Date.now()),
@@ -97,9 +97,10 @@ var users = {
   22: new BasicUser(22, 'Daryl','Carney','Real Estate', Date.now()),
   23: new BasicUser(23, 'Britney','Pennington','Recreational Facilities and Services', Date.now()),
   24: new BasicUser(24, 'Phyllis','Chung','International Affairs', Date.now()),
-  25: new BasicUser(25, 'Susanne','Clark','Facilities Services', Date.now())
+  25: new BasicUser(25, 'Susanne','Clark','Facilities Services', Date.now())*/
 };
 
+var counter = 0;
 
 
 var orderedUsers = [];
@@ -112,67 +113,69 @@ var control = {
   interval: undefined
 };
 function runControl() {
-  if(control.interval) {
-    clearInterval(control.interval);
-    control.interval = undefined;
-  }
-  var increment = 0;
-  var carousel = $('#carousel');
-  var $figures = carousel.find('figure');
-  var minimum = 6;
-  if(orderedUsers.length < 6) {
-    minimum = orderedUsers.length;
-  }
-  $figures.css('opacity', 0.5);
-  control.interval = setInterval(function () {
-    increment++;
-    carousel.css({
-      '-webkit-transform': 'rotateX(' + (increment * -60) + 'deg)'
-    });
-    var pastSix = 0;
-    if (increment > 6) {
-      increment
-    }
-    if (control.stopping && control.winner) {
-      var figureOne = $($figures[carousel.attr('data-state')]);
-      if (figureOne.find('div[name="' + control.winner + '"]').length > 0) {
-        $figures.css('opacity', 0.5);
-        figureOne.css('opacity', 1);
-        console.log("Expecting: " + users[control.winner].getFullName() + " with id: " + control.winner);
-        var $startStopBtn = $('#start-stop-button');
-        $startStopBtn.removeClass('running');
-        $startStopBtn.html("SPIN");
-        control.stopping = false;
-        clearInterval(control.interval);
-        return;
-      } else if($figures.find('div[name="' + control.winner + '"]').length === 0) {
-        for(var i = 0; i < orderedUsers.length; i++) {
-          var cur = orderedUsers[i];
-          if(cur.id === control.winner) {
-            console.log("Added at: " + cur.index);
-            nextUser = cur.index;
-          }
-        }
-      }
-
-    }
     
-    console.log("Stopping: " + control.stopping + " and Winner: " + control.winner);
-    carousel.attr('data-state', (increment % minimum) + 1);
-    var thisFigure = $($figures[(increment + 3) % minimum]);
-    thisFigure.empty();
-    thisFigure.append(orderedUsers[nextUser % orderedUsers.length].user.buildHtmlForAttendeeDrawing());
-    nextUser = ((nextUser + 1) % orderedUsers.length);
-  }, control.speed);
+      if(control.interval) {
+        clearInterval(control.interval);
+        control.interval = undefined;
+      }
+      var increment = 0;
+      var carousel = $('#carousel');
+      var $figures = carousel.find('figure');
+      var minimum = 6;
+      if(orderedUsers.length < 6) {
+        minimum = orderedUsers.length;
+      }
+      $figures.css('opacity', 0.5);
+      control.interval = setInterval(function () {
+        increment++;
+        carousel.css({
+          '-webkit-transform': 'rotateX(' + (increment * -60) + 'deg)'
+        });
+        var pastSix = 0;
+        if (increment > 6) {
+          increment
+        }
+        if (control.stopping && control.winner) {
+          var figureOne = $($figures[carousel.attr('data-state')]);
+          if (figureOne.find('div[name="' + control.winner + '"]').length > 0) {
+            $figures.css('opacity', 0.5);
+            figureOne.css('opacity', 1);
+            console.log("Expecting: " + users[control.winner].getFullName() + " with id: " + control.winner);
+            var $startStopBtn = $('#start-stop-button');
+            $startStopBtn.removeClass('running');
+            $startStopBtn.html("SPIN");
+            control.stopping = false;
+            clearInterval(control.interval);
+            return;
+          } else if($figures.find('div[name="' + control.winner + '"]').length === 0) {
+            for(var i = 0; i < orderedUsers.length; i++) {
+              var cur = orderedUsers[i];
+              if(cur.id === control.winner) {
+                console.log("Added at: " + cur.index);
+                nextUser = cur.index;
+              }
+            }
+          }
+
+        }
+
+        console.log("Stopping: " + control.stopping + " and Winner: " + control.winner);
+        carousel.attr('data-state', (increment % minimum) + 1);
+        var thisFigure = $($figures[(increment + 3) % minimum]);
+        thisFigure.empty();
+        thisFigure.append(orderedUsers[nextUser % orderedUsers.length].user.buildHtmlForAttendeeDrawing());
+        nextUser = ((nextUser + 1) % orderedUsers.length);
+      }, control.speed);
+    
 }
+
 
 function openAttendeeDrawing() {
   document.getElementById('attendee-drawing-overlay').style.width = "100%";
-
   var $slotMachine = $('#planeMachine');
   $slotMachine.empty();
   temporary = true;
-  setupSlotMachine(users);
+  //setupSlotMachine(users);
 
   $('#start-stop-button').off('click').on('click', function(e) {
 
@@ -192,7 +195,10 @@ function openAttendeeDrawing() {
         $startStopBtn.html("STOP");
         control.winner = parseInt(Math.random() * orderedUsers.length) + 1;
         console.log("Expected Winner: " + users[control.winner].getFullName());
-        runControl()
+          
+            runControl();      
+          
+        
       }
     }
   })
@@ -200,11 +206,8 @@ function openAttendeeDrawing() {
     var u = [];
     var split1 = [];
     var usr = [];
-    /*for (var i = 0; i < u.length; i++) {
-        var x = u[i].split(",");
-        console.log(x);
-    }*/
-  $('#csv-button').off('click').on('click', function(e) {
+    
+  $('#csv-button').on('click', function(e) {
       // verify .csv file
       var fileInput = document.getElementById('csvFile');   
       var filename = fileInput.files[0].name;
@@ -226,10 +229,16 @@ function openAttendeeDrawing() {
               for (var i = 1; i < split1.length; i++) {
                   u.push(split1[i]);
               }
-              //console.log(u);
+              for (var i = 0; i < u.length; i++) {
+                  var x = u[i].split(",");
+                  users[++counter] = new BasicUser(counter, x[0], x[1], x[2], Date.now());
+              }
+              setupSlotMachine(users);
+              
           }
           reader.readAsText(file);
       }
+      
   })
 }
 
