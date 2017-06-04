@@ -100,6 +100,8 @@ var users = {
   25: new BasicUser(25, 'Susanne','Clark','Facilities Services', Date.now())
 };
 
+
+
 var orderedUsers = [];
 var nextUser = 0;
 var control = {
@@ -193,6 +195,41 @@ function openAttendeeDrawing() {
         runControl()
       }
     }
+  })
+  
+    var u = [];
+    var split1 = [];
+    var usr = [];
+    /*for (var i = 0; i < u.length; i++) {
+        var x = u[i].split(",");
+        console.log(x);
+    }*/
+  $('#csv-button').off('click').on('click', function(e) {
+      // verify .csv file
+      var fileInput = document.getElementById('csvFile');   
+      var filename = fileInput.files[0].name;
+      
+      // Get the extension
+      var str = filename.split(".");
+      var ext = str[1];
+      if (ext.localeCompare("csv") != 0) {
+          // The file uploaded is not .csv
+          alert("File upload failed. Only .csv file supported");
+      } else {
+          // Read the file
+          var file = fileInput.files[0];
+          var reader = new FileReader();
+          reader.onload = function(e) {
+              var res = reader.result;
+              split1 = this.result.split('\n');
+              
+              for (var i = 1; i < split1.length; i++) {
+                  u.push(split1[i]);
+              }
+              //console.log(u);
+          }
+          reader.readAsText(file);
+      }
   })
 }
 
