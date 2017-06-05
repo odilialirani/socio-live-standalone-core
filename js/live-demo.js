@@ -208,6 +208,7 @@ function openAttendeeDrawing() {
     var usr = [];
     
   $('#csv-button').on('click', function(e) {
+      
       // verify .csv file
       var fileInput = document.getElementById('csvFile');   
       var filename = fileInput.files[0].name;
@@ -219,6 +220,13 @@ function openAttendeeDrawing() {
           // The file uploaded is not .csv
           alert("File upload failed. Only .csv file supported");
       } else {
+          
+          // Making sure that there's no duplicate
+          users = {};
+          orderedUsers = [];
+          $('#carousel').find('figure').empty();
+          
+          
           // Read the file
           var file = fileInput.files[0];
           var reader = new FileReader();
@@ -234,11 +242,9 @@ function openAttendeeDrawing() {
                   users[++counter] = new BasicUser(counter, x[0], x[1], x[2], Date.now());
               }
               setupSlotMachine(users);
-              
           }
           reader.readAsText(file);
       }
-      
   })
 }
 
