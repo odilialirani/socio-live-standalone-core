@@ -222,8 +222,7 @@ function openAttendeeDrawing() {
       } else {
           
           // Making sure that there's no duplicate
-          users = {};
-          orderedUsers = [];
+          
           $('#carousel').find('figure').empty();
           
           
